@@ -1,0 +1,19 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$defaultOptions$#'
+			identifier: parameter.notFound
+			count: 1
+			path: src/Ganesha/GaneshaHttpClient.php
+
+		-
+			message: '#^Method PHPUnit\\Framework\\Assert\:\:assertSame\(\) invoked with 4 parameters, 2\-3 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: tests/Ackintosh/Ganesha/Storage/Adapter/AbstractRedisSpec.php
+
+		-
+			message: '#^Result of method Ackintosh\\Ganesha\\Storage\\Adapter\\Redis\:\:saveStatus\(\) \(void\) is used\.$#'
+			identifier: method.void
+			count: 1
+			path: tests/Ackintosh/Ganesha/Storage/Adapter/AbstractRedisSpec.php
