@@ -402,66 +402,52 @@ class MemcachedTest extends TestCase
      */
     public function outdatedCountsShouldBeEvictedInCaseOfRateStrategy(): void
     {
-        $timeWindow = 1;
-
-        // Build an instance with `Rate` strategy
         $ganesha = Ganesha\Builder::withRateStrategy()
             ->adapter($this->memcachedAdaper)
-            ->timeWindow($timeWindow)
+            ->timeWindow(1)
             ->failureRateThreshold(50)
-            ->minimumRequests(1)
+            ->minimumRequests(6) // Do not trip the circuit if the five requests land in different buckets.
             ->intervalToHalfOpen(10)
             ->build();
 
-        // Record successes.
-        // Since Memcached adapter implements `TumblingTimeWindow`, the count is recorded into a key which based on timestamp.
-        $serviceName = 'outdatedCountsShouldBeEvicted';
+        $serviceName = 'outdatedCountsShouldBeEvicted-' . bin2hex(random_bytes(8));
+        $firstBucket = time();
         $ganesha->success($serviceName);
         $ganesha->success($serviceName);
         $ganesha->success($serviceName);
         $ganesha->failure($serviceName);
         $ganesha->failure($serviceName);
+        $lastBucket = time();
 
-        $reflection = new \ReflectionMethod(Ganesha\Strategy\Rate::class, 'serviceNameDecorator');
-        $reflection->setAccessible(true);
-        $serviceNameDecorator = $reflection->invokeArgs(null, [$timeWindow]);
+        // Requests can span several one-second buckets. Check those same keys before and after expiry.
         $storageKeys = new Ganesha\Storage\StorageKeys();
+        $prefix = $storageKeys->prefix() . $serviceName;
+        $successKeys = [];
+        $failureKeys = [];
+        for ($bucket = $firstBucket; $bucket <= $lastBucket; ++$bucket) {
+            $successKeys[] = $prefix . '.' . $bucket . $storageKeys->success();
+            $failureKeys[] = $prefix . '.' . $bucket . $storageKeys->failure();
+        }
 
-        $successKeyForTheTumblingTimeWindow = $storageKeys->prefix() . $serviceNameDecorator($serviceName) . $storageKeys->success();
-        $failureKeyForTheTumblingTimeWindow = $storageKeys->prefix() . $serviceNameDecorator($serviceName) . $storageKeys->failure();
+        $successCounts = $this->memcached->getMulti($successKeys);
+        $failureCounts = $this->memcached->getMulti($failureKeys);
+        self::assertIsArray($successCounts);
+        self::assertIsArray($failureCounts);
+        self::assertSame(3, array_sum($successCounts));
+        self::assertSame(2, array_sum($failureCounts));
 
-        // The success count `3` could be obtained as the `TumblingTimeWindow` is still valid.
-        self::assertSame(
-            3,
-            (int)$this->memcached->get($successKeyForTheTumblingTimeWindow)
-        );
-        // The failure count `2` could be obtained as the `TumblingTimeWindow` is still valid.
-        self::assertSame(
-            2,
-            (int)$this->memcached->get($failureKeyForTheTumblingTimeWindow)
-        );
+        sleep(15); // The adapter sets a 10-second TTL for a one-second window.
 
-        // Since sleeping 15 seconds as below, the `TumblingTimeWindow` contains the success count recorded above is outdated.
-        sleep(15);
-
-        // The count should be got cleared as the `TumblingTimeWindow` is outdated at this point.
-        self::assertFalse($this->memcached->get($successKeyForTheTumblingTimeWindow));
-        self::assertSame(
-            \Memcached::RES_NOTFOUND,
-            $this->memcached->getResultCode()
-        );
-
-        self::assertFalse($this->memcached->get($failureKeyForTheTumblingTimeWindow));
-        self::assertSame(
-            \Memcached::RES_NOTFOUND,
-            $this->memcached->getResultCode()
-        );
+        foreach (array_merge($successKeys, $failureKeys) as $key) {
+            self::assertFalse($this->memcached->get($key));
+            self::assertSame(\Memcached::RES_NOTFOUND, $this->memcached->getResultCode());
+        }
 
         // Other items that should be alive
-        $statusKey = $storageKeys->prefix() . $serviceName . $storageKeys->status();
+        $statusKey = $prefix . $storageKeys->status();
         self::assertSame(Ganesha::STATUS_CALMED_DOWN, (int)$this->memcached->get($statusKey));
 
-        $lastFailureTimeKey = $storageKeys->prefix() . $serviceName . $storageKeys->lastFailureTime();
+        $lastFailureTimeKey = $prefix . $storageKeys->lastFailureTime();
         self::assertTrue(1 < (int)$this->memcached->get($lastFailureTimeKey));
     }
 }
