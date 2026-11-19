@@ -84,6 +84,48 @@ try {
 }
 ```
 
+### Redis rate strategy with request permits
+
+`Ackintosh\Ganesha\Strategy\RedisRate` is an opt-in strategy for Predis clients.
+Unlike the service-name-only interface, it ties each reported outcome to the
+request that was admitted. It does not change the existing strategies or HTTP
+integrations.
+
+```php
+$breaker = new \Ackintosh\Ganesha\Strategy\RedisRate(
+    redis: $predis,
+    failureRateThresholdPercent: 50,
+    minimumCompletedRequests: 10,
+    failureWindowSeconds: 60,
+    recoveryCooldownSeconds: 30,
+    recoveryProbeLeaseSeconds: 60,
+);
+
+$permit = $breaker->tryAcquire('external_api');
+if ($permit === null) {
+    throw new \RuntimeException('Circuit is open');
+}
+
+try {
+    $result = sendRequestAndReadResponse();
+} catch (TransportException $exception) {
+    $permit->fail();
+    throw $exception;
+}
+
+$permit->succeed();
+```
+
+After the cooldown, only one request can claim the recovery lease. On
+expiry, another request can claim the lease; the expired request's result
+cannot change the circuit. A request admitted before recovery cannot affect
+the new circuit generation. Redis errors allow untracked requests.
+
+The strategy keeps one state hash per service name. Outcome history and
+leases expire independently. Use stable service names, not request IDs or
+user-controlled URLs. Do not mix this strategy with legacy outcome methods
+for the same circuit; it uses a separate Redis key namespace.
+
 ### Three states of circuit breaker
 
 <img src="https://user-images.githubusercontent.com/1885716/53690408-4a7f3d00-3dad-11e9-852c-0e082b7b9636.png" width="500">
