@@ -6,7 +6,7 @@ Ganesha is PHP implementation of [Circuit Breaker pattern](http://martinfowler.c
 
 ![ganesha](https://ackintosh.github.io/assets/images/ganesha.png)
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/simpod/ganesha.svg?style=flat-square)](https://packagist.org/packages/simpod/ganesha) [![Tests](https://github.com/ackintosh/ganesha/workflows/Tests/badge.svg)](https://github.com/ackintosh/ganesha/actions) [![Coverage Status](https://coveralls.io/repos/github/ackintosh/ganesha/badge.svg?branch=master)](https://coveralls.io/github/ackintosh/ganesha?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ackintosh/ganesha/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ackintosh/ganesha/?branch=master) [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.1-8892BF.svg?style=flat-square)](https://php.net/)
+[![Latest Stable Version](https://img.shields.io/packagist/v/simpod/ganesha.svg?style=flat-square)](https://packagist.org/packages/simpod/ganesha) [![Tests](https://github.com/ackintosh/ganesha/workflows/Tests/badge.svg)](https://github.com/ackintosh/ganesha/actions) [![Coverage Status](https://coveralls.io/repos/github/ackintosh/ganesha/badge.svg?branch=master)](https://coveralls.io/github/ackintosh/ganesha?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ackintosh/ganesha/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ackintosh/ganesha/?branch=master) [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.5-8892BF.svg?style=flat-square)](https://php.net/)
 
 </div>
 
@@ -687,8 +687,9 @@ $ docker-compose run --rm -w /tmp/ganesha -u ganesha client vendor/bin/phpunit
 ## [Requirements](#table-of-contents)
 
 - An extension or client library which is used by [the storage adapter](https://github.com/ackintosh/ganesha#adapters) you've choice will be required. Please check the [Adapters](https://github.com/ackintosh/ganesha#adapters) section for details.
+- PHP 8.5 is the minimum supported version.
 
-### Version Guidance
+### Upstream Version Guidance
 
 | Version | PHP Version | Latest Release                                                         |
 |---------|-------------|------------------------------------------------------------------------|
