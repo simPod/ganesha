@@ -28,6 +28,7 @@ This is one of the [Circuit Breaker](https://martinfowler.com/bliki/CircuitBreak
 - [Companies using Ganesha :rocket:](#companies-using-ganesha-rocket)
 - [The articles/videos Ganesha loves :sparkles: :elephant: :sparkles:](#the-articlesvideos-ganesha-loves-sparkles-elephant-sparkles)
 - [Run tests](#run-tests)
+- [Run static analysis](#run-static-analysis)
 - [Requirements](#requirements)
 - [Build promotion site with Soushi](#build-promotion-site-with-soushi)
 - [Author](#author)
@@ -683,6 +684,18 @@ $ docker-compose run --rm -w /tmp/ganesha -u ganesha client composer install
 # Run tests in container
 $ docker-compose run --rm -w /tmp/ganesha -u ganesha client vendor/bin/phpunit
 ```
+
+## [Run static analysis](#table-of-contents)
+
+Use PHP 8.5 with APCu, Redis, Memcached, and MongoDB PHP extensions installed. No data store services need to run.
+
+```bash
+composer update
+vendor/bin/phpstan analyse --no-progress
+```
+
+PHPStan checks `src/` and `tests/` at level 2. The baseline records existing findings only. Remove an entry when its
+underlying issue is fixed; do not add new findings to the baseline.
 
 ## [Requirements](#table-of-contents)
 
