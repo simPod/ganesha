@@ -200,7 +200,7 @@ class MongoDB implements AdapterInterface, TumblingTimeWindowInterface, SlidingT
                     break;
             }
             $writeConcern = new \MongoDB\Driver\WriteConcern(\MongoDB\Driver\WriteConcern::MAJORITY, 100);
-            $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulk, $writeConcern);
+            $result = $this->manager->executeBulkWrite($this->getNamespace(), $bulk, ['writeConcern' => $writeConcern]);
             if (!empty($result->getWriteErrors())) {
                 $errorMessage = '';
                 foreach ($result->getWriteErrors() as $writeError) {

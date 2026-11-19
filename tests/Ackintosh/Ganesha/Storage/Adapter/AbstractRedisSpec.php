@@ -115,6 +115,7 @@ abstract class AbstractRedisSpec extends TestCase
         $this->expectExceptionMessageMatches("/\AFailed to execute zAdd command/");
         $this->expectException(StorageException::class);
         $mock = $this->getMockBuilder(\Redis::class)->getMock();
+        $mock->method('zRemRangeByScore')->willReturn(0);
         $mock->method('zAdd')
             ->willReturn(false);
 
@@ -129,6 +130,7 @@ abstract class AbstractRedisSpec extends TestCase
         $this->expectExceptionMessage('exception test');
         $this->expectException(StorageException::class);
         $mock = $this->getMockBuilder(\Redis::class)->getMock();
+        $mock->method('zRemRangeByScore')->willReturn(0);
         $mock->method('zAdd')
             ->willThrowException(new \RedisException('exception test'));
 
@@ -157,6 +159,7 @@ abstract class AbstractRedisSpec extends TestCase
         $this->expectExceptionMessageMatches("/\AFailed to execute zCard command/");
         $this->expectException(StorageException::class);
         $mock = $this->getMockBuilder(\Redis::class)->getMock();
+        $mock->method('zRemRangeByScore')->willReturn(0);
         $mock->method('zCard')
             ->willReturn(false);
 
@@ -171,6 +174,7 @@ abstract class AbstractRedisSpec extends TestCase
         $this->expectExceptionMessage('exception test');
         $this->expectException(StorageException::class);
         $mock = $this->getMockBuilder(\Redis::class)->getMock();
+        $mock->method('zRemRangeByScore')->willReturn(0);
         $mock->method('zCard')
             ->willThrowException(new \RedisException('exception test'));
 
