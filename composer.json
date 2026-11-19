@@ -18,7 +18,7 @@
   ],
   "require": {
     "php": "^8.5",
-    "psr/http-message": "^1.0 || ^2.0"
+    "psr/http-message": "^2.0"
   },
   "require-dev": {
     "ext-memcached": "^3.1",
@@ -26,8 +26,8 @@
     "ext-redis": "^5.1 || ^6.3",
     "ergebnis/composer-normalize": "^2.57",
     "friendsofphp/php-cs-fixer": "^3.1.0",
-    "guzzlehttp/guzzle": "^7.4.5",
-    "php-vcr/php-vcr": "dev-master#c0aeeba0f3804fcfdb9cd6b390b0cb3be250c070 as 1.9.0",
+    "guzzlehttp/guzzle": "^8.0.0",
+    "php-vcr/php-vcr": "^1.12",
     "php-vcr/phpunit-testlistener-vcr": "dev-phpunit-evt-system",
     "phpstan/phpstan": "^2.3",
     "phpstan/phpstan-phpunit": "^2.1",
