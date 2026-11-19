@@ -13,4 +13,3 @@
 docker-compose.yml export-ignore
 LICENSE export-ignore
 phpunit.xml export-ignore
-psalm.xml export-ignore

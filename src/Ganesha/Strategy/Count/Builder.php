@@ -28,7 +28,7 @@ class Builder
     private static $adapterRequirement = 'supportCountStrategy';
 
     /**
-     * @psalm-param (AdapterInterface&SlidingTimeWindowInterface)|(AdapterInterface&TumblingTimeWindowInterface) $adapter
+     * @param (AdapterInterface&SlidingTimeWindowInterface)|(AdapterInterface&TumblingTimeWindowInterface) $adapter
      */
     public function adapter(AdapterInterface $adapter): self
     {
@@ -37,7 +37,7 @@ class Builder
     }
 
     /**
-     * @psalm-param int<1, max> $failureCountThreshold
+     * @param int<1, max> $failureCountThreshold
      */
     public function failureCountThreshold(int $failureCountThreshold): self
     {
@@ -46,7 +46,7 @@ class Builder
     }
 
     /**
-     * @psalm-param int<1, max> $intervalToHalfOpen
+     * @param int<1, max> $intervalToHalfOpen
      */
     public function intervalToHalfOpen(int $intervalToHalfOpen): self
     {

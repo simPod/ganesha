@@ -33,7 +33,7 @@ class Builder
     private static $adapterRequirement = 'supportRateStrategy';
 
     /**
-     * @psalm-param (AdapterInterface&SlidingTimeWindowInterface)|(AdapterInterface&TumblingTimeWindowInterface) $adapter
+     * @param (AdapterInterface&SlidingTimeWindowInterface)|(AdapterInterface&TumblingTimeWindowInterface) $adapter
      */
     public function adapter(AdapterInterface $adapter): self
     {
@@ -42,7 +42,7 @@ class Builder
     }
 
     /**
-     * @psalm-param int<1, 100> $failureRateThreshold
+     * @param int<1, 100> $failureRateThreshold
      */
     public function failureRateThreshold(int $failureRateThreshold): self
     {
@@ -51,7 +51,7 @@ class Builder
     }
 
     /**
-     * @psalm-param int<1, max> $intervalToHalfOpen
+     * @param int<1, max> $intervalToHalfOpen
      */
     public function intervalToHalfOpen(int $intervalToHalfOpen): self
     {
@@ -66,7 +66,7 @@ class Builder
     }
 
     /**
-     * @psalm-param int<1, max> $minimumRequests
+     * @param int<1, max> $minimumRequests
      */
     public function minimumRequests(int $minimumRequests): self
     {
@@ -75,7 +75,7 @@ class Builder
     }
 
     /**
-     * @psalm-param int<1, max> $timeWindow
+     * @param int<1, max> $timeWindow
      */
     public function timeWindow(int $timeWindow): self
     {

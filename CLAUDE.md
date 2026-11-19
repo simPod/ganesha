@@ -10,7 +10,6 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Install dependencies with Docker: `docker-compose run --rm -w /tmp/ganesha -u ganesha client composer install`
 
 ### Code Quality
-- Run static analysis: `vendor/bin/psalm`
 - PHP-CS-Fixer for code formatting: `vendor/bin/php-cs-fixer fix`
 
 ### Local Development with Docker
