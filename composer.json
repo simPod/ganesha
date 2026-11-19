@@ -1,46 +1,53 @@
 {
   "name": "simpod/ganesha",
   "description": "PHP implementation of Circuit Breaker pattern",
-  "keywords": ["circuit breaker", "microservices", "fault tolerance", "error handling", "guzzle middleware"],
-  "type": "library",
   "license": "MIT",
+  "type": "library",
+  "keywords": [
+    "circuit breaker",
+    "microservices",
+    "fault tolerance",
+    "error handling",
+    "guzzle middleware"
+  ],
   "authors": [
     {
       "name": "akihito.nakano",
       "email": "sora.akatsuki@gmail.com"
     }
   ],
+  "require": {
+    "php": "^8.5",
+    "psr/http-message": "^1.0 || ^2.0"
+  },
+  "require-dev": {
+    "ext-memcached": "^3.1",
+    "ext-mongodb": "^1.6 || ^2.2",
+    "ext-redis": "^5.1 || ^6.3",
+    "ergebnis/composer-normalize": "^2.57",
+    "friendsofphp/php-cs-fixer": "^3.1.0",
+    "guzzlehttp/guzzle": "^7.4.5",
+    "php-coveralls/php-coveralls": "^2.5",
+    "php-vcr/php-vcr": "dev-master#c0aeeba0f3804fcfdb9cd6b390b0cb3be250c070 as 1.9.0",
+    "php-vcr/phpunit-testlistener-vcr": "dev-phpunit-evt-system",
+    "phpunit/phpunit": "^10.5.41",
+    "predis/predis": "^1.1",
+    "symfony/http-client": "^5.3.12 || ^6.0",
+    "symfony/yaml": "^3.0 || ^4.0 || ^5.0 || ^6.0"
+  },
+  "suggest": {
+    "ext-memcached": "Allows the usage of MemcachedAdapter",
+    "ext-mongodb": "Allows the usage of MongoDBAdapter",
+    "ext-redis": "Allows the usage of RedisAdapter with Redis, RedisArray and RedisCluster",
+    "guzzlehttp/guzzle": "Allows the usage of the Guzzle Middleware",
+    "symfony/http-client": "Allows the usage of the Ganesha HttpClient"
+  },
   "repositories": [
     {
       "type": "git",
       "url": "https://github.com/marmichalski/phpunit-testlistener-vcr"
     }
   ],
-  "require": {
-    "php": "^8.5",
-    "psr/http-message": "^1.0|^2.0"
-  },
-  "suggest": {
-    "guzzlehttp/guzzle": "Allows the usage of the Guzzle Middleware",
-    "symfony/http-client": "Allows the usage of the Ganesha HttpClient",
-    "ext-redis": "Allows the usage of RedisAdapter with Redis, RedisArray and RedisCluster",
-    "ext-memcached": "Allows the usage of MemcachedAdapter",
-    "ext-mongodb": "Allows the usage of MongoDBAdapter"
-  },
-  "require-dev": {
-    "phpunit/phpunit": "^10.5.41",
-    "symfony/http-client": "^5.3.12|^6.0",
-    "symfony/yaml": "^3.0|^4.0|^5.0|^6.0",
-    "php-vcr/php-vcr": "dev-master#c0aeeba0f3804fcfdb9cd6b390b0cb3be250c070 as 1.9.0",
-    "php-vcr/phpunit-testlistener-vcr": "dev-phpunit-evt-system",
-    "php-coveralls/php-coveralls": "~2.5",
-    "predis/predis": "^1.1",
-    "guzzlehttp/guzzle": "^7.4.5",
-    "friendsofphp/php-cs-fixer": "^v3.1.0",
-    "ext-redis": "~5.1|^6.3",
-    "ext-memcached": "~3.1",
-    "ext-mongodb": "~1.6|^2.2"
-  },
   "autoload": {
     "psr-4": {
       "Ackintosh\\": "src/"
@@ -50,5 +57,11 @@
     "psr-4": {
       "Ackintosh\\": "tests/Ackintosh/"
     }
+  },
+  "config": {
+    "allow-plugins": {
+      "ergebnis/composer-normalize": true
+    },
+    "sort-packages": true
   }
 }
