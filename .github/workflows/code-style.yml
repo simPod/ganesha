@@ -28,5 +28,8 @@ jobs:
       - name: Update dependencies with composer
         run: composer update
 
+      - name: Check Composer manifest format
+        run: composer normalize --dry-run
+
       - name: Run php-cs-fixer
         run: ./vendor/bin/php-cs-fixer fix --dry-run --diff .
