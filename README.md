@@ -6,7 +6,7 @@ Ganesha is PHP implementation of [Circuit Breaker pattern](http://martinfowler.c
 
 ![ganesha](https://ackintosh.github.io/assets/images/ganesha.png)
 
-[![Latest Stable Version](https://img.shields.io/packagist/v/simpod/ganesha.svg?style=flat-square)](https://packagist.org/packages/simpod/ganesha) [![Tests](https://github.com/ackintosh/ganesha/workflows/Tests/badge.svg)](https://github.com/ackintosh/ganesha/actions) [![Coverage Status](https://codecov.io/gh/simPod/ganesha/branch/master/graph/badge.svg)](https://codecov.io/gh/simPod/ganesha) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ackintosh/ganesha/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ackintosh/ganesha/?branch=master) [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.5-8892BF.svg?style=flat-square)](https://php.net/)
+[![Latest Stable Version](https://img.shields.io/packagist/v/simpod/ganesha.svg?style=flat-square)](https://packagist.org/packages/simpod/ganesha) [![Tests](https://github.com/simPod/ganesha/actions/workflows/tests.yml/badge.svg)](https://github.com/simPod/ganesha/blob/master/.github/workflows/tests.yml) [![Coverage Status](https://codecov.io/gh/simPod/ganesha/branch/master/graph/badge.svg)](https://codecov.io/gh/simPod/ganesha) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/ackintosh/ganesha/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/ackintosh/ganesha/?branch=master) [![Minimum PHP Version](https://img.shields.io/badge/php-%3E%3D%208.5-8892BF.svg?style=flat-square)](https://php.net/)
 
 </div>
 
