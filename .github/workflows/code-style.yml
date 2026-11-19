@@ -26,7 +26,9 @@ jobs:
           fail-fast: true
 
       - name: Update dependencies with composer
-        run: composer update
+        uses: ramsey/composer-install@4.0.0
+        with:
+          dependency-versions: highest
 
       - name: Check Composer manifest format
         run: composer normalize --dry-run
