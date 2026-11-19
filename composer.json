@@ -37,7 +37,6 @@
     "predis/predis": "^1.1",
     "guzzlehttp/guzzle": "^7.4.5",
     "friendsofphp/php-cs-fixer": "^v3.1.0",
-    "vimeo/psalm" : "*",
     "ext-redis": "~5.1|^6.3",
     "ext-memcached": "~3.1",
     "ext-mongodb": "~1.6|^2.2"
