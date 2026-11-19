@@ -2,7 +2,7 @@
 
 ## Status
 
-Accepted for the fork. The [upstream maintenance question](https://github.com/ackintosh/ganesha/issues/140) is separate.
+Proposed.
 
 ## Context
 
