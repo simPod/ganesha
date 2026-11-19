@@ -20,7 +20,7 @@ services:
       RUN_IN_DOCKER_COMPOSE: 1
       XDEBUG_MODE: coverage
   memcached:
-    image: memcached:1.5.4
+    image: memcached:1.6.45
     container_name: memcached
   redis:
     image: redis:4.0.6
