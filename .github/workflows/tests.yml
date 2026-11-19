@@ -32,22 +32,10 @@ jobs:
       fail-fast: false
       matrix:
         php-version:
-          - "8.1"
-          - "8.2"
-          - "8.3"
-          - "8.4"
           - "8.5"
         composer-opts:
           - ""
           - --prefer-lowest --prefer-stable
-        include:
-          # phpredis 5.3.7 does not build on PHP 8.4 or later.
-          - php-version: "8.4"
-            redis-extension: redis-6.3.0
-          - php-version: "8.5"
-            redis-extension: redis-6.3.0
-            # MongoDB 1.21 uses a PHP API removed in 8.5.
-            mongodb-extension: mongodb-2.2.0
     steps:
       - uses: actions/checkout@v4
 
@@ -60,8 +48,7 @@ jobs:
           # Specific versions of extensions available on PECL can be set up by suffixing the extension's name with the version.
           # https://github.com/shivammathur/setup-php?tab=readme-ov-file#heavy_plus_sign-php-extension-support
           extensions: >-
-            apcu, ${{ matrix.redis-extension || 'redis-5.3.7' }}, memcached,
-            ${{ matrix.mongodb-extension || 'mongodb-1.21.1' }}
+            apcu, redis-6.3.0, memcached-3.4.0, mongodb-2.5.7
           ini-values: apc.enable_cli=1
           coverage: xdebug
         env:
@@ -75,7 +62,7 @@ jobs:
 
       # https://github.com/php-coveralls/php-coveralls#github-actions
       - name: Upload coverage results to Coveralls
-        if: ${{ matrix.php-version == '8.1' }}
+        if: ${{ matrix.php-version == '8.5' }}
         env:
           COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |

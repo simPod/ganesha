@@ -1,4 +1,4 @@
-FROM php:8.1-cli
+FROM php:8.5-cli
 
 COPY install_composer.sh /tmp/
 
@@ -12,13 +12,13 @@ RUN apt-get update \
  && apt-get install --no-install-recommends -y git \
  && yes '' | pecl install zip \
  && echo 'extension=zip.so' >> /usr/local/etc/php/php.ini \
- && yes '' | pecl install memcached \
+ && yes '' | pecl install memcached-3.4.0 \
  && echo 'extension=memcached.so' >> /usr/local/etc/php/php.ini \
- && yes '' | pecl install redis-5.3.7 \
+ && yes '' | pecl install redis-6.3.0 \
  && echo 'extension=redis.so' >> /usr/local/etc/php/php.ini \
- && yes '' | pecl install xdebug-3.1.5 \
+ && yes '' | pecl install xdebug \
  && echo 'zend_extension=xdebug.so' >> /usr/local/etc/php/php.ini \
- && yes '' | pecl install mongodb-1.21.1 \
+ && yes '' | pecl install mongodb-2.5.7 \
  && echo 'extension=mongodb.so' >> /usr/local/etc/php/php.ini \
  && yes '' | pecl install apcu \
  && echo 'extension=apcu.so' >> /usr/local/etc/php/php.ini \
