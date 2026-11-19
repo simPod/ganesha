@@ -15,5 +15,37 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v7
+      - name: Install PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.5'
+          coverage: none
+      - name: Check PHP syntax
+        run: git ls-files -z -- '*.php' | xargs -0 -r -n1 php -l
       - name: Lint Code Base
-        uses: docker://github/super-linter:v2.1.0
+        uses: docker://github/super-linter:v2.2.2
+        env:
+          # This image uses PHP 7. Setting any VALIDATE_* flag in v2 requires
+          # explicitly enabling every other validator that should still run.
+          VALIDATE_PHP: 'false'
+          VALIDATE_ANSIBLE: 'true'
+          VALIDATE_BASH: 'true'
+          VALIDATE_COFFEE: 'true'
+          VALIDATE_CSS: 'true'
+          VALIDATE_DOCKER: 'true'
+          VALIDATE_ENV: 'true'
+          VALIDATE_GO: 'true'
+          VALIDATE_JAVASCRIPT_ES: 'true'
+          VALIDATE_JAVASCRIPT_STANDARD: 'true'
+          VALIDATE_JSON: 'true'
+          VALIDATE_KOTLIN: 'true'
+          VALIDATE_MD: 'true'
+          VALIDATE_PERL: 'true'
+          VALIDATE_POWERSHELL: 'true'
+          VALIDATE_PYTHON: 'true'
+          VALIDATE_RUBY: 'true'
+          VALIDATE_TERRAFORM: 'true'
+          VALIDATE_TYPESCRIPT_ES: 'true'
+          VALIDATE_TYPESCRIPT_STANDARD: 'true'
+          VALIDATE_XML: 'true'
+          VALIDATE_YAML: 'true'
