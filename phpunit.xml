@@ -7,7 +7,6 @@
 >
   <coverage>
     <report>
-      <!-- https://github.com/php-coveralls/php-coveralls#phpunit -->
       <clover outputFile="build/logs/clover.xml"/>
       <text outputFile="php://stdout" showUncoveredFiles="false"/>
     </report>
