@@ -5,6 +5,8 @@ namespace Ackintosh\Ganesha\Strategy;
 use Ackintosh\Ganesha\RequestPermit;
 use PHPUnit\Framework\TestCase;
 use Predis\Client;
+use Predis\ClientException;
+use Predis\ClientInterface;
 
 final class RedisRateTest extends TestCase
 {
@@ -58,15 +60,18 @@ final class RedisRateTest extends TestCase
         );
         $this->acquire($breaker)->fail();
         self::assertNull($anotherWorker->tryAcquire($this->service));
+        self::assertNull($anotherWorker->tryAcquireRecovery($this->service));
 
         usleep(1_100_000);
 
         $expiredProbe = $this->acquire($breaker);
+        self::assertNull($anotherWorker->tryAcquireRecovery($this->service));
         self::assertNull($anotherWorker->tryAcquire($this->service));
 
         usleep(1_100_000);
 
-        $replacement = $this->acquire($anotherWorker);
+        $replacement = $anotherWorker->tryAcquireRecovery($this->service);
+        self::assertInstanceOf(RequestPermit::class, $replacement);
         $expiredProbe->succeed();
         self::assertNull($breaker->tryAcquire($this->service));
 
@@ -75,10 +80,35 @@ final class RedisRateTest extends TestCase
 
         usleep(1_100_000);
 
-        $this->acquire($breaker)->succeed();
+        $probe = $breaker->tryAcquireRecovery($this->service);
+        self::assertInstanceOf(RequestPermit::class, $probe);
+        $probe->succeed();
         $this->acquire($anotherWorker)->fail();
         // A failure here opens immediately only if the previous success was a probe.
         self::assertNull($breaker->tryAcquire($this->service));
+    }
+
+    public function testRecoveryAcquisitionSkipsHealthyServicesWithoutInitializingState(): void
+    {
+        $breaker = new RedisRate($this->redis, 100, 1, 60, 60, 60);
+
+        self::assertNull($breaker->tryAcquireRecovery($this->service));
+        self::assertSame(0, $this->redis->exists($this->keyPrefix() . ':state'));
+
+        $this->acquire($breaker)->succeed();
+
+        self::assertNull($breaker->tryAcquireRecovery($this->service));
+    }
+
+    public function testRedisFailureSkipsRecoveryButAllowsARealRequest(): void
+    {
+        $redis = $this->createStub(ClientInterface::class);
+        $redis->method('createCommand')->willReturnCallback($this->redis->createCommand(...));
+        $redis->method('executeCommand')->willThrowException(new ClientException());
+        $breaker = new RedisRate($redis, 100, 1, 60, 60, 60);
+
+        self::assertNull($breaker->tryAcquireRecovery($this->service));
+        $this->acquire($breaker)->succeed();
     }
 
     public function testAnOldRequestCannotChangeRecreatedState(): void

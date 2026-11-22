@@ -13,8 +13,12 @@ use Predis\PredisException;
 final class RedisRate
 {
     private const ACQUIRE = <<<'LUA'
+        local recoveryOnly = ARGV[4] == '1'
         local generation = redis.call('HGET', KEYS[1], 'generation')
         if not generation then
+            if recoveryOnly then
+                return {}
+            end
             redis.call('DEL', KEYS[2], KEYS[3], KEYS[4])
             redis.call('HSET', KEYS[1], 'generation', ARGV[1])
             return {ARGV[1], 0}
@@ -22,6 +26,9 @@ final class RedisRate
 
         local openedAt = redis.call('HGET', KEYS[1], 'opened_at')
         if not openedAt then
+            if recoveryOnly then
+                return {}
+            end
             return {generation, 0}
         end
 
@@ -114,6 +121,20 @@ final class RedisRate
      */
     public function tryAcquire(string $service): ?RequestPermit
     {
+        return $this->acquire($service, recoveryOnly: false);
+    }
+
+    /**
+     * Reserves a recovery permit only for an open circuit after its cooldown.
+     * Returns null if there is no eligible circuit, the lease is held, or Redis is unavailable.
+     */
+    public function tryAcquireRecovery(string $service): ?RequestPermit
+    {
+        return $this->acquire($service, recoveryOnly: true);
+    }
+
+    private function acquire(string $service, bool $recoveryOnly): ?RequestPermit
+    {
         $token = bin2hex(random_bytes(16));
         $prefix = 'ganesha:redis-rate:{' . hash('sha256', $service) . '}';
         $keys = [$prefix . ':state', $prefix . ':completed', $prefix . ':failures', $prefix . ':probe'];
@@ -126,9 +147,10 @@ final class RedisRate
                 $token,
                 $this->recoveryCooldownSeconds * 1000,
                 $this->recoveryProbeLeaseSeconds * 1000,
+                $recoveryOnly ? 1 : 0,
             ]));
         } catch (PredisException) {
-            return $this->untrackedPermit();
+            return $recoveryOnly ? null : $this->untrackedPermit();
         }
 
         if ($result === []) {
@@ -136,7 +158,11 @@ final class RedisRate
         }
 
         if (!is_array($result) || !is_string($result[0] ?? null) || !in_array($result[1] ?? null, [0, 1], true)) {
-            return $this->untrackedPermit();
+            return $recoveryOnly ? null : $this->untrackedPermit();
+        }
+
+        if ($recoveryOnly && $result[1] !== 1) {
+            return null;
         }
 
         return new RequestPermit(function (bool $failed) use ($keys, $token, $result): void {
