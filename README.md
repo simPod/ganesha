@@ -121,6 +121,13 @@ expiry, another request can claim the lease; the expired request's result
 cannot change the circuit. A request admitted before recovery cannot affect
 the new circuit generation. Redis errors allow untracked requests.
 
+For scheduled health checks, call `tryAcquireRecovery($service)`. If it
+returns a permit, run the health check and complete that permit with
+`succeed()` or `fail()`. A null return means no check should run: the circuit
+is missing or closed, its cooldown has not elapsed, another request holds
+the lease, or Redis could not confirm acquisition. This shares the same
+lease with `tryAcquire()`, which can still admit real requests for recovery.
+
 The strategy keeps one state hash per service name. Outcome history and
 leases expire independently. Use stable service names, not request IDs or
 user-controlled URLs. Do not mix this strategy with legacy outcome methods
