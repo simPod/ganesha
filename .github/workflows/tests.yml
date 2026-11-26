@@ -63,7 +63,7 @@ jobs:
         run: vendor/bin/phpunit
 
       - name: Upload coverage report
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: phpunit-${{ matrix.php-version }}-${{ matrix.dependency-versions }}.coverage
           path: build/logs/clover.xml
@@ -78,7 +78,7 @@ jobs:
         with:
           persist-credentials: false
       - name: Download coverage reports
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: reports
           pattern: phpunit-*.coverage
