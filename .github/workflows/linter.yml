@@ -23,7 +23,7 @@ jobs:
       - name: Check PHP syntax
         run: git ls-files -z -- '*.php' | xargs -0 -r -n1 php -l
       - name: Lint Code Base
-        uses: docker://github/super-linter:v2.2.2
+        uses: docker://github/super-linter:v5.0.0
         env:
           # This image uses PHP 7. Setting any VALIDATE_* flag in v2 requires
           # explicitly enabling every other validator that should still run.
