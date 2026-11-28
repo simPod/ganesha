@@ -23,7 +23,7 @@ services:
     image: memcached:1.6.45
     container_name: memcached
   redis:
-    image: redis:4.0.14
+    image: redis:8.12.0
     container_name: redis
   mongo:
     image: mongo:4.4.30
